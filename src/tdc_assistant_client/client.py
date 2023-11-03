@@ -1,4 +1,4 @@
-from typing import Any, Optional, Dict
+from typing import Any, Optional, Dict, Literal
 
 import asyncio
 
@@ -9,9 +9,13 @@ from gql.transport.aiohttp import AIOHTTPTransport
 from gql.utilities import update_schema_scalars
 
 from .scalars import DatetimeScalar
-from .queries import get_chat_logs_query
+
+from .queries import get_chat_logs_query, get_chat_log_query
 
 from .domain import ChatLog
+
+# Variable values
+GetChatLogVariableValues = dict[Literal["chat_log_id"], str]
 
 
 class TdcAssistantClient:
@@ -53,3 +57,10 @@ class TdcAssistantClient:
 
     def get_chat_logs(self) -> list[ChatLog]:
         return self.execute_query(query=get_chat_logs_query, key="chatLogs")
+
+    def get_chat_log(self, variable_values: GetChatLogVariableValues) -> ChatLog:
+        return self.execute_query(
+            query=get_chat_log_query,
+            key="chatLog",
+            variable_values={"chatLogId": variable_values["chat_log_id"]},
+        )
