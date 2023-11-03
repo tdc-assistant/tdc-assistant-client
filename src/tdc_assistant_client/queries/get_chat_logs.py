@@ -1,15 +1,6 @@
-from typing import List
+from gql import gql
 
-import asyncio
-
-from gql import gql, Client
-from gql.utilities import update_schema_scalars
-from gql.transport.aiohttp import AIOHTTPTransport
-
-from ..scalars import DatetimeScalar
-from ..domain import ChatLog
-
-query = gql(
+get_chat_logs_query = gql(
     """
     query ChatLogs {
       chatLogs {
@@ -88,22 +79,3 @@ query = gql(
     }
 """
 )
-
-
-async def get_chat_logs_async(transport: AIOHTTPTransport) -> List[ChatLog]:
-    async with Client(
-        transport=transport, fetch_schema_from_transport=True, execute_timeout=None
-    ) as session:
-        update_schema_scalars(session.client.schema, [DatetimeScalar])
-
-        result = await session.execute(
-            query,
-            serialize_variables=True,
-            parse_result=True,
-        )
-
-        return result["chatLogs"]
-
-
-def get_chat_logs(transport: AIOHTTPTransport) -> List[ChatLog]:
-    return asyncio.run(get_chat_logs_async(transport))
