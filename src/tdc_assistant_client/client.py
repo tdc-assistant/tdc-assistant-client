@@ -15,9 +15,10 @@ from .queries import get_chat_logs_query, get_chat_log_query
 from .mutations import (
     create_chat_completion_annotation_mutation,
     create_chat_log_mutation,
+    create_message_mutation,
 )
 
-from .domain import ChatLog, ChatCompletionAnnotation
+from .domain import ChatLog, Message, ChatCompletionAnnotation, MessageRole
 
 
 class GetChatLogArgs(TypedDict):
@@ -30,6 +31,12 @@ class CreateChatLogArgs(TypedDict):
 
 class CreateChatCompletionAnnotationArgs(TypedDict):
     message_id: str
+
+
+class CreateMessageArgs(TypedDict):
+    chat_log_id: str
+    content: str
+    role: MessageRole
 
 
 class TdcAssistantClient:
@@ -96,4 +103,15 @@ class TdcAssistantClient:
             query=create_chat_log_mutation,
             key="createChatLog",
             variable_values={"customerName": kwargs["customer_name"]},
+        )
+
+    def create_message(self, **kwargs: Unpack[CreateMessageArgs]) -> Message:
+        return self.execute_query(
+            query=create_message_mutation,
+            key="createMessage",
+            variable_values={
+                "chatLogId": kwargs["chat_log_id"],
+                "content": kwargs["content"],
+                "role": kwargs["role"],
+            },
         )
