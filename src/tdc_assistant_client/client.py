@@ -31,7 +31,7 @@ class CreateChatLogArgs(TypedDict):
 
 
 class CreateChatCompletionAnnotationArgs(TypedDict):
-    message_id: str
+    message: Message
 
 
 class CreateMessageArgs(TypedDict):
@@ -101,7 +101,7 @@ class TdcAssistantClient:
         return self.execute_query(
             query=create_chat_completion_annotation_mutation,
             key="createChatCompletionAnnotation",
-            variable_values={"messageId": kwargs["message_id"]},
+            variable_values={"messageId": kwargs["message"]["id"]},
         )
 
     def create_chat_log(self, **kwargs: Unpack[CreateChatLogArgs]) -> ChatLog:
