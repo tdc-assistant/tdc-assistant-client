@@ -2,6 +2,7 @@
   "python.defaultInterpreterPath": "${workspaceFolder}/.venv",
   "python.envFile": "${workspaceFolder}/.venv",
   "mypy.runUsingActiveInterpreter": true,
+  "mypy-type-checker.args": ["--enable-incomplete-feature=Unpack"],
   "[python]": {
     "editor.defaultFormatter": "ms-python.black-formatter",
     "editor.formatOnSave": true

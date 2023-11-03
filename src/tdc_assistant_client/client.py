@@ -1,4 +1,4 @@
-from typing import Any, Optional, Dict, Literal
+from typing import Any, Optional, Dict, TypedDict, Unpack
 
 import asyncio
 
@@ -14,8 +14,9 @@ from .queries import get_chat_logs_query, get_chat_log_query
 
 from .domain import ChatLog
 
-# Variable values
-GetChatLogVariableValues = dict[Literal["chat_log_id"], str]
+
+class GetChatLogArgs(TypedDict):
+    chat_log_id: str
 
 
 class TdcAssistantClient:
@@ -37,7 +38,10 @@ class TdcAssistantClient:
         )
 
     async def _execute_query_async(
-        self, query: DocumentNode, key: str, variable_values: Optional[Dict[str, Any]]
+        self,
+        query: DocumentNode,
+        key: str,
+        variable_values: Optional[Dict[str, Any]] = None,
     ):
         async with Client(
             transport=self._transport,
@@ -58,9 +62,9 @@ class TdcAssistantClient:
     def get_chat_logs(self) -> list[ChatLog]:
         return self.execute_query(query=get_chat_logs_query, key="chatLogs")
 
-    def get_chat_log(self, variable_values: GetChatLogVariableValues) -> ChatLog:
+    def get_chat_log(self, **kwargs: Unpack[GetChatLogArgs]) -> ChatLog:
         return self.execute_query(
             query=get_chat_log_query,
             key="chatLog",
-            variable_values={"chatLogId": variable_values["chat_log_id"]},
+            variable_values={"chatLogId": kwargs["chat_log_id"]},
         )
