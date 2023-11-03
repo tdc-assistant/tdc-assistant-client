@@ -12,11 +12,24 @@ from .scalars import DatetimeScalar
 
 from .queries import get_chat_logs_query, get_chat_log_query
 
-from .domain import ChatLog
+from .mutations import (
+    create_chat_completion_annotation_mutation,
+    create_chat_log_mutation,
+)
+
+from .domain import ChatLog, Message
 
 
 class GetChatLogArgs(TypedDict):
     chat_log_id: str
+
+
+class CreateChatLogArgs(TypedDict):
+    customer_name: str
+
+
+class CreateChatCompletionAnnotationArgs(TypedDict):
+    message_id: str
 
 
 class TdcAssistantClient:
@@ -67,4 +80,20 @@ class TdcAssistantClient:
             query=get_chat_log_query,
             key="chatLog",
             variable_values={"chatLogId": kwargs["chat_log_id"]},
+        )
+
+    def create_chat_completion_annotation(
+        self, **kwargs: Unpack[CreateChatCompletionAnnotationArgs]
+    ):
+        return self.execute_query(
+            query=create_chat_completion_annotation_mutation,
+            key="createChatCompletionAnnotation",
+            variable_values={"messageId": kwargs["message_id"]},
+        )
+
+    def create_chat_log(self, **kwargs: Unpack[CreateChatLogArgs]):
+        return self.execute_query(
+            query=create_chat_log_mutation,
+            key="createChatLog",
+            variable_values={"customerName": kwargs["customer_name"]},
         )
