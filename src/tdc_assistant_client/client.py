@@ -1,6 +1,7 @@
-from typing import Any, Optional, Dict
+from typing import Any, Optional, Dict, TypedDict, Unpack
 
 import asyncio
+from datetime import datetime
 
 from graphql import DocumentNode
 
@@ -9,9 +10,79 @@ from gql.transport.aiohttp import AIOHTTPTransport
 from gql.utilities import update_schema_scalars
 
 from .scalars import DatetimeScalar
-from .queries import get_chat_logs_query
 
-from .domain import ChatLog
+from .queries import get_chat_logs_query, get_chat_log_query
+
+from .mutations import (
+    create_chat_completion_annotation_mutation,
+    create_chat_log_mutation,
+    create_message_mutation,
+    create_response_annotation_mutation,
+    create_workspace_annotation_mutation,
+    create_workspace_mutation,
+    update_chat_completion_annotation_mutation,
+    update_chat_log_mutation,
+    update_workspace_mutation,
+)
+
+from .domain import (
+    ChatLog,
+    Message,
+    ChatCompletionAnnotation,
+    MessageRole,
+    WorkspaceType,
+    Workspace,
+)
+
+
+class GetChatLogArgs(TypedDict):
+    chat_log_id: str
+
+
+class CreateChatLogArgs(TypedDict):
+    customer_name: str
+
+
+class CreateChatCompletionAnnotationArgs(TypedDict):
+    message: Message
+
+
+class CreateMessageArgs(TypedDict):
+    chat_log_id: str
+    content: str
+    role: MessageRole
+
+
+class CreateResponseAnnotationArgs(TypedDict):
+    message: Message
+    content: str
+
+
+class CreateWorkspaceAnnotationArgs(TypedDict):
+    message: Message
+    content: str
+    board_number: int
+
+
+class CreateWorkspaceArgs(TypedDict):
+    chat_log: ChatLog
+    board_number: int
+    workspace_type: WorkspaceType
+    content: str
+
+
+class UpdateChatCompletionAnnotation(TypedDict):
+    chat_completion_annotation: ChatCompletionAnnotation
+    sent_at: datetime
+
+
+class UpdateChatLog(TypedDict):
+    customer_name: str
+
+
+class UpdateWorkspace(TypedDict):
+    workspace: Workspace
+    content: str
 
 
 class TdcAssistantClient:
@@ -33,7 +104,10 @@ class TdcAssistantClient:
         )
 
     async def _execute_query_async(
-        self, query: DocumentNode, key: str, variable_values: Optional[Dict[str, Any]]
+        self,
+        query: DocumentNode,
+        key: str,
+        variable_values: Optional[Dict[str, Any]] = None,
     ):
         async with Client(
             transport=self._transport,
@@ -53,3 +127,108 @@ class TdcAssistantClient:
 
     def get_chat_logs(self) -> list[ChatLog]:
         return self.execute_query(query=get_chat_logs_query, key="chatLogs")
+
+    def get_chat_log(self, **kwargs: Unpack[GetChatLogArgs]) -> ChatLog:
+        return self.execute_query(
+            query=get_chat_log_query,
+            key="chatLog",
+            variable_values={"chatLogId": kwargs["chat_log_id"]},
+        )
+
+    def create_chat_completion_annotation(
+        self, **kwargs: Unpack[CreateChatCompletionAnnotationArgs]
+    ) -> Optional[ChatCompletionAnnotation]:
+        return self.execute_query(
+            query=create_chat_completion_annotation_mutation,
+            key="createChatCompletionAnnotation",
+            variable_values={"messageId": kwargs["message"]["id"]},
+        )
+
+    def create_chat_log(self, **kwargs: Unpack[CreateChatLogArgs]) -> ChatLog:
+        return self.execute_query(
+            query=create_chat_log_mutation,
+            key="createChatLog",
+            variable_values={"customerName": kwargs["customer_name"]},
+        )
+
+    def create_message(self, **kwargs: Unpack[CreateMessageArgs]) -> Message:
+        return self.execute_query(
+            query=create_message_mutation,
+            key="createMessage",
+            variable_values={
+                "chatLogId": kwargs["chat_log_id"],
+                "content": kwargs["content"],
+                "role": kwargs["role"],
+            },
+        )
+
+    def create_response_annotation(
+        self, **kwargs: Unpack[CreateResponseAnnotationArgs]
+    ):
+        return self.execute_query(
+            query=create_response_annotation_mutation,
+            key="createResponseAnnotation",
+            variable_values={
+                "messageId": kwargs["message"]["id"],
+                "content": kwargs["content"],
+            },
+        )
+
+    def create_workspace_annotation(
+        self, **kwargs: Unpack[CreateWorkspaceAnnotationArgs]
+    ):
+        return self.execute_query(
+            query=create_workspace_annotation_mutation,
+            key="createWorkspaceAnnotation",
+            variable_values={
+                "messageId": kwargs["message"]["id"],
+                "content": kwargs["content"],
+                "boardNumber": kwargs["board_number"],
+            },
+        )
+
+    def create_workspace(self, **kwargs: Unpack[CreateWorkspaceArgs]):
+        return self.execute_query(
+            query=create_workspace_mutation,
+            key="createWorkspace",
+            variable_values={
+                "input": {
+                    "chatLogId": kwargs["chat_log"]["id"],
+                    "boardNumber": kwargs["board_number"],
+                    "type": kwargs["workspace_type"],
+                    "content": kwargs["content"],
+                }
+            },
+        )
+
+    def update_chat_completion_annotation(
+        self, **kwargs: Unpack[UpdateChatCompletionAnnotation]
+    ):
+        return self.execute_query(
+            query=update_chat_completion_annotation_mutation,
+            key="updateChatCompletionAnnotation",
+            variable_values={
+                "input": {
+                    "id": kwargs["chat_completion_annotation"]["id"],
+                    "sentAt": kwargs["sent_at"],
+                }
+            },
+        )
+
+    def update_chat_log(self, **kwargs: Unpack[UpdateChatLog]):
+        return self.execute_query(
+            query=update_chat_log_mutation,
+            key="updateChatLog",
+            variable_values={
+                "customerName": kwargs["customer_name"],
+            },
+        )
+
+    def update_workspace(self, **kwargs: Unpack[UpdateWorkspace]):
+        return self.execute_query(
+            query=update_workspace_mutation,
+            key="updateWorkspace",
+            variable_values={
+                "input": {"id": kwargs["workspace"]["id"], "content": kwargs["content"]}
+            },
+        )
