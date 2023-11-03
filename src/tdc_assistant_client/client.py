@@ -17,7 +17,7 @@ from .mutations import (
     create_chat_log_mutation,
 )
 
-from .domain import ChatLog, Message
+from .domain import ChatLog, ChatCompletionAnnotation
 
 
 class GetChatLogArgs(TypedDict):
@@ -84,14 +84,14 @@ class TdcAssistantClient:
 
     def create_chat_completion_annotation(
         self, **kwargs: Unpack[CreateChatCompletionAnnotationArgs]
-    ):
+    ) -> Optional[ChatCompletionAnnotation]:
         return self.execute_query(
             query=create_chat_completion_annotation_mutation,
             key="createChatCompletionAnnotation",
             variable_values={"messageId": kwargs["message_id"]},
         )
 
-    def create_chat_log(self, **kwargs: Unpack[CreateChatLogArgs]):
+    def create_chat_log(self, **kwargs: Unpack[CreateChatLogArgs]) -> ChatLog:
         return self.execute_query(
             query=create_chat_log_mutation,
             key="createChatLog",
