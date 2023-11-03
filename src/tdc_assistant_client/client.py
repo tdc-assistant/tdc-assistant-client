@@ -1,6 +1,7 @@
 from typing import Any, Optional, Dict, TypedDict, Unpack
 
 import asyncio
+from datetime import datetime
 
 from graphql import DocumentNode
 
@@ -19,6 +20,7 @@ from .mutations import (
     create_response_annotation_mutation,
     create_workspace_annotation_mutation,
     create_workspace_mutation,
+    update_chat_completion_annotation_mutation,
 )
 
 from .domain import (
@@ -64,6 +66,11 @@ class CreateWorkspaceArgs(TypedDict):
     board_number: int
     workspace_type: WorkspaceType
     content: str
+
+
+class UpdateChatCompletionAnnotation(TypedDict):
+    chat_completion_annotation: ChatCompletionAnnotation
+    sent_at: datetime
 
 
 class TdcAssistantClient:
@@ -178,6 +185,20 @@ class TdcAssistantClient:
                     "boardNumber": kwargs["board_number"],
                     "type": kwargs["workspace_type"],
                     "content": kwargs["content"],
+                }
+            },
+        )
+
+    def update_chat_completion_annotation(
+        self, **kwargs: Unpack[UpdateChatCompletionAnnotation]
+    ):
+        return self.execute_query(
+            query=update_chat_completion_annotation_mutation,
+            key="updateChatCompletionAnnotation",
+            variable_values={
+                "input": {
+                    "id": kwargs["chat_completion_annotation"]["id"],
+                    "sentAt": kwargs["sent_at"],
                 }
             },
         )
