@@ -16,6 +16,7 @@ from .mutations import (
     create_chat_completion_annotation_mutation,
     create_chat_log_mutation,
     create_message_mutation,
+    create_response_annotation_mutation,
 )
 
 from .domain import ChatLog, Message, ChatCompletionAnnotation, MessageRole
@@ -37,6 +38,11 @@ class CreateMessageArgs(TypedDict):
     chat_log_id: str
     content: str
     role: MessageRole
+
+
+class CreateResponseAnnotationArgs(TypedDict):
+    message: Message
+    content: str
 
 
 class TdcAssistantClient:
@@ -113,5 +119,17 @@ class TdcAssistantClient:
                 "chatLogId": kwargs["chat_log_id"],
                 "content": kwargs["content"],
                 "role": kwargs["role"],
+            },
+        )
+
+    def create_response_annotation(
+        self, **kwargs: Unpack[CreateResponseAnnotationArgs]
+    ):
+        return self.execute_query(
+            query=create_response_annotation_mutation,
+            key="createResponseAnnotation",
+            variable_values={
+                "messageId": kwargs["message"]["id"],
+                "content": kwargs["content"],
             },
         )
