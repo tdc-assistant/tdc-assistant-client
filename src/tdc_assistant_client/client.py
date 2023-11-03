@@ -21,6 +21,7 @@ from .mutations import (
     create_workspace_annotation_mutation,
     create_workspace_mutation,
     update_chat_completion_annotation_mutation,
+    update_chat_log_mutation,
 )
 
 from .domain import (
@@ -71,6 +72,10 @@ class CreateWorkspaceArgs(TypedDict):
 class UpdateChatCompletionAnnotation(TypedDict):
     chat_completion_annotation: ChatCompletionAnnotation
     sent_at: datetime
+
+
+class UpdateChatLog(TypedDict):
+    customer_name: str
 
 
 class TdcAssistantClient:
@@ -200,5 +205,14 @@ class TdcAssistantClient:
                     "id": kwargs["chat_completion_annotation"]["id"],
                     "sentAt": kwargs["sent_at"],
                 }
+            },
+        )
+
+    def update_chat_log(self, **kwargs: Unpack[UpdateChatLog]):
+        return self.execute_query(
+            query=update_chat_log_mutation,
+            key="updateChatLog",
+            variable_values={
+                "customerName": kwargs["customer_name"],
             },
         )
