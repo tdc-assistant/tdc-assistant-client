@@ -18,9 +18,16 @@ from .mutations import (
     create_message_mutation,
     create_response_annotation_mutation,
     create_workspace_annotation_mutation,
+    create_workspace_mutation,
 )
 
-from .domain import ChatLog, Message, ChatCompletionAnnotation, MessageRole
+from .domain import (
+    ChatLog,
+    Message,
+    ChatCompletionAnnotation,
+    MessageRole,
+    WorkspaceType,
+)
 
 
 class GetChatLogArgs(TypedDict):
@@ -50,6 +57,13 @@ class CreateWorkspaceAnnotationArgs(TypedDict):
     message: Message
     content: str
     board_number: int
+
+
+class CreateWorkspaceArgs(TypedDict):
+    chat_log: ChatLog
+    board_number: int
+    workspace_type: WorkspaceType
+    content: str
 
 
 class TdcAssistantClient:
@@ -151,5 +165,19 @@ class TdcAssistantClient:
                 "messageId": kwargs["message"]["id"],
                 "content": kwargs["content"],
                 "boardNumber": kwargs["board_number"],
+            },
+        )
+
+    def create_workspace(self, **kwargs: Unpack[CreateWorkspaceArgs]):
+        return self.execute_query(
+            query=create_workspace_mutation,
+            key="createWorkspace",
+            variable_values={
+                "input": {
+                    "chatLogId": kwargs["chat_log"]["id"],
+                    "boardNumber": kwargs["board_number"],
+                    "type": kwargs["workspace_type"],
+                    "content": kwargs["content"],
+                }
             },
         )
