@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import Any, Dict, Optional
+from dateutil import parser
 
 from graphql import GraphQLScalarType, ValueNode
 from graphql.utilities import value_from_ast_untyped
@@ -10,7 +11,7 @@ def serialize_datetime(value: Any) -> str:
 
 
 def parse_datetime_value(value: Any) -> datetime:
-    return datetime.fromisoformat(value)
+    return parser.isoparse(value)
 
 
 def parse_datetime_literal(
