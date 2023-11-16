@@ -209,13 +209,14 @@ class TdcAssistantClient:
     def update_chat_completion_annotation(
         self, **kwargs: Unpack[UpdateChatCompletionAnnotation]
     ):
+        sent_at = kwargs["sent_at"]
         return self.execute_query(
             query=update_chat_completion_annotation_mutation,
             key="updateChatCompletionAnnotation",
             variable_values={
                 "input": {
                     "id": kwargs["chat_completion_annotation"]["id"],
-                    "sentAt": kwargs["sent_at"],
+                    "sentAt": sent_at.isoformat() if sent_at else None,
                     "approvalStatus": kwargs["approval_status"],
                 }
             },
