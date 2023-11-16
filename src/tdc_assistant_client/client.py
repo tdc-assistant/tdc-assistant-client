@@ -1,4 +1,4 @@
-from typing import Any, Optional, Dict, TypedDict
+from typing import Any, Optional, Dict, TypedDict, Literal, Union
 from typing_extensions import Unpack
 
 import asyncio
@@ -72,9 +72,13 @@ class CreateWorkspaceArgs(TypedDict):
     content: str
 
 
+ChatCompletionAnnotationApprovalStatus = Union[Literal["APPROVED"], Literal["DECLINED"]]
+
+
 class UpdateChatCompletionAnnotation(TypedDict):
     chat_completion_annotation: ChatCompletionAnnotation
     sent_at: datetime
+    approval_status: ChatCompletionAnnotationApprovalStatus
 
 
 class UpdateChatLog(TypedDict):
@@ -212,6 +216,7 @@ class TdcAssistantClient:
                 "input": {
                     "id": kwargs["chat_completion_annotation"]["id"],
                     "sentAt": kwargs["sent_at"],
+                    "approvalStatus": kwargs["approval_status"],
                 }
             },
         )
