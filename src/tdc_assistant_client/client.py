@@ -77,8 +77,8 @@ ChatCompletionAnnotationApprovalStatus = Union[Literal["APPROVED"], Literal["DEC
 
 class UpdateChatCompletionAnnotation(TypedDict):
     chat_completion_annotation: ChatCompletionAnnotation
-    sent_at: datetime
-    approval_status: ChatCompletionAnnotationApprovalStatus
+    sent_at: Optional[datetime]
+    approval_status: Optional[ChatCompletionAnnotationApprovalStatus]
 
 
 class UpdateChatLog(TypedDict):
