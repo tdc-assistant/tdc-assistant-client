@@ -24,6 +24,8 @@ from .mutations import (
     update_chat_completion_annotation_mutation,
     update_chat_log_mutation,
     update_workspace_mutation,
+    create_image_capture_annotation_mutation,
+    create_code_editor_mutation,
 )
 
 from .domain import (
@@ -31,8 +33,6 @@ from .domain import (
     Message,
     ChatCompletionAnnotation,
     MessageRole,
-    WorkspaceType,
-    Workspace,
 )
 
 
@@ -65,13 +65,6 @@ class CreateWorkspaceAnnotationArgs(TypedDict):
     board_number: int
 
 
-class CreateWorkspaceArgs(TypedDict):
-    chat_log: ChatLog
-    board_number: int
-    workspace_type: WorkspaceType
-    content: str
-
-
 ChatCompletionAnnotationApprovalStatus = Union[Literal["APPROVED"], Literal["DECLINED"]]
 
 
@@ -85,14 +78,16 @@ class UpdateChatLog(TypedDict):
     customer_name: str
 
 
-class UpdateWorkspace(TypedDict):
-    workspace: Workspace
-    content: str
-
-
 class CreateImageCaptureAnnotation(TypedDict):
     message: Message
     image_url: str
+
+
+class CreateCodeEditor(TypedDict):
+    chat_log: ChatLog
+    programming_language: str
+    editor_number: int
+    content: str
 
 
 class TdcAssistantClient:
@@ -197,20 +192,6 @@ class TdcAssistantClient:
             },
         )
 
-    def create_workspace(self, **kwargs: Unpack[CreateWorkspaceArgs]):
-        return self.execute_query(
-            query=create_workspace_mutation,
-            key="createWorkspace",
-            variable_values={
-                "input": {
-                    "chatLogId": kwargs["chat_log"]["id"],
-                    "boardNumber": kwargs["board_number"],
-                    "type": kwargs["workspace_type"],
-                    "content": kwargs["content"],
-                }
-            },
-        )
-
     def update_chat_completion_annotation(
         self, **kwargs: Unpack[UpdateChatCompletionAnnotation]
     ):
@@ -235,23 +216,28 @@ class TdcAssistantClient:
             },
         )
 
-    def update_workspace(self, **kwargs: Unpack[UpdateWorkspace]):
-        return self.execute_query(
-            query=update_workspace_mutation,
-            key="updateWorkspace",
-            variable_values={
-                "input": {"id": kwargs["workspace"]["id"], "content": kwargs["content"]}
-            },
-        )
-
     def create_image_capture_annotation(
         self, **kwargs: Unpack[CreateImageCaptureAnnotation]
     ):
         return self.execute_query(
-            query=update_workspace_mutation,
+            query=create_image_capture_annotation_mutation,
             key="createImageCaptureAnnotation",
             variable_values={
                 "messageId": kwargs["message"]["id"],
                 "imageUrl": kwargs["image_url"],
+            },
+        )
+
+    def create_code_editor(self, **kwargs: Unpack[CreateCodeEditor]):
+        return self.execute_query(
+            query=create_code_editor_mutation,
+            key="createCodeEditor",
+            variable_values={
+                "input": {
+                    "chatLogId": kwargs["chat_log"],
+                    "programmingLanguage": kwargs["programming_language"],
+                    "editorNumber": kwargs["editor_number"],
+                    "content": kwargs["content"],
+                }
             },
         )
