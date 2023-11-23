@@ -90,6 +90,11 @@ class UpdateWorkspace(TypedDict):
     content: str
 
 
+class CreateImageCaptureAnnotation(TypedDict):
+    message: Message
+    image_url: str
+
+
 class TdcAssistantClient:
     _transport: AIOHTTPTransport
 
@@ -236,5 +241,17 @@ class TdcAssistantClient:
             key="updateWorkspace",
             variable_values={
                 "input": {"id": kwargs["workspace"]["id"], "content": kwargs["content"]}
+            },
+        )
+
+    def create_image_capture_annotation(
+        self, **kwargs: Unpack[CreateImageCaptureAnnotation]
+    ):
+        return self.execute_query(
+            query=update_workspace_mutation,
+            key="createImageCaptureAnnotation",
+            variable_values={
+                "messageId": kwargs["message"]["id"],
+                "imageUrl": kwargs["image_url"],
             },
         )
