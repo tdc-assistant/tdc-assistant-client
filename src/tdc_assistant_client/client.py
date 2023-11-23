@@ -33,8 +33,6 @@ from .domain import (
     Message,
     ChatCompletionAnnotation,
     MessageRole,
-    WorkspaceType,
-    Workspace,
 )
 
 
@@ -67,13 +65,6 @@ class CreateWorkspaceAnnotationArgs(TypedDict):
     board_number: int
 
 
-class CreateWorkspaceArgs(TypedDict):
-    chat_log: ChatLog
-    board_number: int
-    workspace_type: WorkspaceType
-    content: str
-
-
 ChatCompletionAnnotationApprovalStatus = Union[Literal["APPROVED"], Literal["DECLINED"]]
 
 
@@ -85,11 +76,6 @@ class UpdateChatCompletionAnnotation(TypedDict):
 
 class UpdateChatLog(TypedDict):
     customer_name: str
-
-
-class UpdateWorkspace(TypedDict):
-    workspace: Workspace
-    content: str
 
 
 class CreateImageCaptureAnnotation(TypedDict):
@@ -206,20 +192,6 @@ class TdcAssistantClient:
             },
         )
 
-    def create_workspace(self, **kwargs: Unpack[CreateWorkspaceArgs]):
-        return self.execute_query(
-            query=create_workspace_mutation,
-            key="createWorkspace",
-            variable_values={
-                "input": {
-                    "chatLogId": kwargs["chat_log"]["id"],
-                    "boardNumber": kwargs["board_number"],
-                    "type": kwargs["workspace_type"],
-                    "content": kwargs["content"],
-                }
-            },
-        )
-
     def update_chat_completion_annotation(
         self, **kwargs: Unpack[UpdateChatCompletionAnnotation]
     ):
@@ -241,15 +213,6 @@ class TdcAssistantClient:
             key="updateChatLog",
             variable_values={
                 "customerName": kwargs["customer_name"],
-            },
-        )
-
-    def update_workspace(self, **kwargs: Unpack[UpdateWorkspace]):
-        return self.execute_query(
-            query=update_workspace_mutation,
-            key="updateWorkspace",
-            variable_values={
-                "input": {"id": kwargs["workspace"]["id"], "content": kwargs["content"]}
             },
         )
 
