@@ -24,6 +24,8 @@ from .mutations import (
     update_chat_completion_annotation_mutation,
     update_chat_log_mutation,
     update_workspace_mutation,
+    create_image_capture_annotation_mutation,
+    create_code_editor_mutation,
 )
 
 from .domain import (
@@ -93,6 +95,13 @@ class UpdateWorkspace(TypedDict):
 class CreateImageCaptureAnnotation(TypedDict):
     message: Message
     image_url: str
+
+
+class CreateCodeEditor(TypedDict):
+    chat_log: ChatLog
+    programming_language: str
+    editor_number: int
+    content: str
 
 
 class TdcAssistantClient:
@@ -248,10 +257,24 @@ class TdcAssistantClient:
         self, **kwargs: Unpack[CreateImageCaptureAnnotation]
     ):
         return self.execute_query(
-            query=update_workspace_mutation,
+            query=create_image_capture_annotation_mutation,
             key="createImageCaptureAnnotation",
             variable_values={
                 "messageId": kwargs["message"]["id"],
                 "imageUrl": kwargs["image_url"],
+            },
+        )
+
+    def create_code_editor(self, **kwargs: Unpack[CreateCodeEditor]):
+        return self.execute_query(
+            query=create_code_editor_mutation,
+            key="createCodeEditor",
+            variable_values={
+                "input": {
+                    "chatLogId": kwargs["chat_log"],
+                    "programmingLanguage": kwargs["programming_language"],
+                    "editorNumber": kwargs["editor_number"],
+                    "content": kwargs["content"],
+                }
             },
         )

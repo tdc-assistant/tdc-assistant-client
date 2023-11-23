@@ -1,12 +1,4 @@
-from typing import Optional, Literal
-from .base import Base
+from .code_editor import CodeEditor
 
 
-WorkspaceType = Literal["WHITEBOARD", "TEXT_EDITOR", "CODE_EDITOR"]
-
-
-class Workspace(Base):
-    chatLogId: str
-    boardNumber: int
-    type: Optional[WorkspaceType]
-    content: str
+Workspace = CodeEditor  # TODO Make union when more types are added
