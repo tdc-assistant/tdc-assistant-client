@@ -1,13 +1,14 @@
 from gql import gql
 
-create_code_editor_mutation = gql(
+update_code_editor_mutation = gql(
     """
-mutation CreateCodeEditor($input: CreateCodeEditorInput) {
-  createCodeEditor(input: $input) {
+mutation UpdateCodeEditor($input: UpdateCodeEditorInput) {
+  updateCodeEditor(input: $input) {
     id
     createdAt
     updatedAt
     deletedAt
+    type
     programmingLanguage
     editorNumber
     content

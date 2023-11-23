@@ -4,4 +4,5 @@ from .annotation import *
 from .response_annotation import *
 from .message_role import *
 from .chat_completion_annotation import *
+from .code_editor import *
 from .workspace import *

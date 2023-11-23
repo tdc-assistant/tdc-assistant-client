@@ -20,20 +20,14 @@ from .mutations import (
     create_message_mutation,
     create_response_annotation_mutation,
     create_workspace_annotation_mutation,
-    create_workspace_mutation,
     update_chat_completion_annotation_mutation,
     update_chat_log_mutation,
-    update_workspace_mutation,
     create_image_capture_annotation_mutation,
     create_code_editor_mutation,
+    update_code_editor_mutation,
 )
 
-from .domain import (
-    ChatLog,
-    Message,
-    ChatCompletionAnnotation,
-    MessageRole,
-)
+from .domain import ChatLog, Message, ChatCompletionAnnotation, MessageRole, CodeEditor
 
 
 class GetChatLogArgs(TypedDict):
@@ -87,6 +81,11 @@ class CreateCodeEditor(TypedDict):
     chat_log: ChatLog
     programming_language: str
     editor_number: int
+    content: str
+
+
+class UpdateCodeEditor(TypedDict):
+    code_editor: CodeEditor
     content: str
 
 
@@ -234,9 +233,21 @@ class TdcAssistantClient:
             key="createCodeEditor",
             variable_values={
                 "input": {
-                    "chatLogId": kwargs["chat_log"],
+                    "chatLogId": kwargs["chat_log"]["id"],
                     "programmingLanguage": kwargs["programming_language"],
                     "editorNumber": kwargs["editor_number"],
+                    "content": kwargs["content"],
+                }
+            },
+        )
+
+    def update_code_editor(self, **kwargs: Unpack[UpdateCodeEditor]):
+        return self.execute_query(
+            query=update_code_editor_mutation,
+            key="updateCodeEditor",
+            variable_values={
+                "input": {
+                    "id": kwargs["code_editor"]["id"],
                     "content": kwargs["content"],
                 }
             },
