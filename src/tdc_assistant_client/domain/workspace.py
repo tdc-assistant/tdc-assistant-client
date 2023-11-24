@@ -1,4 +1,7 @@
+from typing import Union
+
 from .code_editor import CodeEditor
+from .word_processor import WordProcessor
 
 
-Workspace = CodeEditor  # TODO Make union when more types are added
+Workspace = Union[CodeEditor, WordProcessor]
