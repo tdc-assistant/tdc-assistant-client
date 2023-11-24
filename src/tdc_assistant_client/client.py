@@ -25,9 +25,18 @@ from .mutations import (
     create_image_capture_annotation_mutation,
     create_code_editor_mutation,
     update_code_editor_mutation,
+    create_word_processor_mutation,
+    update_word_processor_mutation,
 )
 
-from .domain import ChatLog, Message, ChatCompletionAnnotation, MessageRole, CodeEditor
+from .domain import (
+    ChatLog,
+    Message,
+    ChatCompletionAnnotation,
+    MessageRole,
+    CodeEditor,
+    WordProcessor,
+)
 
 
 class GetChatLogArgs(TypedDict):
@@ -86,6 +95,17 @@ class CreateCodeEditor(TypedDict):
 
 class UpdateCodeEditor(TypedDict):
     code_editor: CodeEditor
+    content: str
+
+
+class CreateWordProcessor(TypedDict):
+    chat_log: ChatLog
+    number: int
+    content: str
+
+
+class UpdateWordProcessor(TypedDict):
+    word_processor: WordProcessor
     content: str
 
 
@@ -248,6 +268,31 @@ class TdcAssistantClient:
             variable_values={
                 "input": {
                     "id": kwargs["code_editor"]["id"],
+                    "content": kwargs["content"],
+                }
+            },
+        )
+
+    def create_word_processor(self, **kwargs: Unpack[CreateWordProcessor]):
+        return self.execute_query(
+            query=create_word_processor_mutation,
+            key="createWordProcessor",
+            variable_values={
+                "input": {
+                    "chatLogId": kwargs["chat_log"]["id"],
+                    "number": kwargs["number"],
+                    "content": kwargs["content"],
+                }
+            },
+        )
+
+    def update_word_processor(self, **kwargs: Unpack[UpdateWordProcessor]):
+        return self.execute_query(
+            query=update_word_processor_mutation,
+            key="updateWordProcessor",
+            variable_values={
+                "input": {
+                    "id": kwargs["word_processor"]["id"],
                     "content": kwargs["content"],
                 }
             },
