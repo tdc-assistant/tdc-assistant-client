@@ -88,6 +88,14 @@ get_chat_logs_query = gql(
         editorNumber
         content
       }
+      ... on WordProcessor {
+        id
+        createdAt
+        updatedAt
+        deletedAt
+        number
+        content
+      }
     }
   }
 }
