@@ -88,6 +88,14 @@ query ChatLog($chatLogId: ID!) {
         editorNumber
         content
       }
+      ... on WordProcessor {
+        id
+        createdAt
+        updatedAt
+        deletedAt
+        number
+        content
+      }
     }
   }
 }
