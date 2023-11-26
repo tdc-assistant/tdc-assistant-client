@@ -68,6 +68,7 @@ get_chat_logs_query = gql(
           createdAt
           updatedAt
           deletedAt
+          type
           imageCapture {
             id
             createdAt

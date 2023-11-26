@@ -67,6 +67,7 @@ query ChatLog($chatLogId: ID!) {
           createdAt
           updatedAt
           deletedAt
+          type
           imageCapture {
             id
             createdAt
