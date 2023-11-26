@@ -87,6 +87,7 @@ get_chat_logs_query = gql(
         programmingLanguage
         editorNumber
         content
+        type
       }
       ... on WordProcessor {
         id
@@ -95,6 +96,7 @@ get_chat_logs_query = gql(
         deletedAt
         number
         content
+        type
       }
     }
   }

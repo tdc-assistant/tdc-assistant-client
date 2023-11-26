@@ -87,6 +87,7 @@ query ChatLog($chatLogId: ID!) {
         programmingLanguage
         editorNumber
         content
+        type
       }
       ... on WordProcessor {
         id
@@ -95,6 +96,7 @@ query ChatLog($chatLogId: ID!) {
         deletedAt
         number
         content
+        type
       }
     }
   }
