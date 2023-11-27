@@ -4,6 +4,6 @@ from .base import Base
 
 class WordProcessor(Base):
     type: Literal["WORD_PROCESSOR"]
-    chat_log_id: str
+    chatLogId: str
     number: int
     content: str

@@ -6,6 +6,7 @@ query ChatLog($chatLogId: ID!) {
   chatLog(id: $chatLogId) {
     createdAt
     customerName
+    rawText
     deletedAt
     id
     messages {

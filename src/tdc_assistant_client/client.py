@@ -79,6 +79,7 @@ class UpdateChatCompletionAnnotation(TypedDict):
 
 class UpdateChatLog(TypedDict):
     customer_name: str
+    raw_text: str
 
 
 class CreateImageCaptureAnnotation(TypedDict):
@@ -231,7 +232,10 @@ class TdcAssistantClient:
             query=update_chat_log_mutation,
             key="updateChatLog",
             variable_values={
-                "customerName": kwargs["customer_name"],
+                "input": {
+                    "customerName": kwargs["customer_name"],
+                    "rawText": kwargs["raw_text"]
+                }
             },
         )
 

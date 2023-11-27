@@ -5,5 +5,6 @@ from .workspace import Workspace
 
 class ChatLog(Base):
     customerName: str
+    rawText: str
     messages: list[Message]
     workspaces: list[Workspace]

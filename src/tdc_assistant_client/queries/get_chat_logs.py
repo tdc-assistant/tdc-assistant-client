@@ -9,6 +9,7 @@ get_chat_logs_query = gql(
     updatedAt
     deletedAt
     customerName
+    rawText
     messages {
       id
       createdAt
