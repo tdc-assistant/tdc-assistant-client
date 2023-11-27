@@ -9,4 +9,4 @@ class ChatLog(Base):
     rawText: str
     messages: list[Message]
     workspaces: list[Workspace]
-    chat_completions: list[ChatCompletion]
+    chatCompletions: list[ChatCompletion]
