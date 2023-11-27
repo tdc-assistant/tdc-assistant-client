@@ -46,7 +46,6 @@ class GetChatLogArgs(TypedDict):
 class CreateChatLogArgs(TypedDict):
     customer_name: str
     raw_text: str
-    messages: list[Message]
 
 
 class CreateChatCompletionAnnotationArgs(TypedDict):
@@ -82,8 +81,6 @@ class UpdateChatCompletionAnnotation(TypedDict):
 class UpdateChatLog(TypedDict):
     customer_name: str
     raw_text: str
-    messages: list[Message]
-    shouldClearMessages: bool
 
 
 class CreateImageCaptureAnnotation(TypedDict):
@@ -181,7 +178,6 @@ class TdcAssistantClient:
                 "input": {
                     "customerName": kwargs["customer_name"],
                     "rawText": kwargs["raw_text"],
-                    "messages": kwargs["messages"],
                 }
             },
         )
@@ -245,8 +241,6 @@ class TdcAssistantClient:
                 "input": {
                     "customerName": kwargs["customer_name"],
                     "rawText": kwargs["raw_text"],
-                    "messages": kwargs["messages"],
-                    "shouldClearMessages": kwargs["shouldClearMessages"],
                 }
             },
         )
