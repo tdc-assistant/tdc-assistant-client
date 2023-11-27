@@ -45,6 +45,7 @@ class GetChatLogArgs(TypedDict):
 
 class CreateChatLogArgs(TypedDict):
     customer_name: str
+    raw_text: str
 
 
 class CreateChatCompletionAnnotationArgs(TypedDict):
@@ -173,7 +174,12 @@ class TdcAssistantClient:
         return self.execute_query(
             query=create_chat_log_mutation,
             key="createChatLog",
-            variable_values={"customerName": kwargs["customer_name"]},
+            variable_values={
+                "input": {
+                    "customerName": kwargs["customer_name"],
+                    "rawText": kwargs["raw_text"],
+                }
+            },
         )
 
     def create_message(self, **kwargs: Unpack[CreateMessageArgs]) -> Message:
@@ -234,7 +240,7 @@ class TdcAssistantClient:
             variable_values={
                 "input": {
                     "customerName": kwargs["customer_name"],
-                    "rawText": kwargs["raw_text"]
+                    "rawText": kwargs["raw_text"],
                 }
             },
         )
