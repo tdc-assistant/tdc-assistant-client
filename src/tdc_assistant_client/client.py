@@ -27,6 +27,7 @@ from .mutations import (
     update_code_editor_mutation,
     create_word_processor_mutation,
     update_word_processor_mutation,
+    update_chat_completion_mutation,
 )
 
 from .domain import (
@@ -36,6 +37,7 @@ from .domain import (
     MessageRole,
     CodeEditor,
     WordProcessor,
+    ChatCompletion,
 )
 
 
@@ -113,6 +115,11 @@ class CreateWordProcessor(TypedDict):
 class UpdateWordProcessor(TypedDict):
     word_processor: WordProcessor
     content: str
+
+
+class UpdateChatCompletion(TypedDict):
+    chat_completion: ChatCompletion
+    sent_at: Optional[datetime]
 
 
 class TdcAssistantClient:
@@ -315,6 +322,18 @@ class TdcAssistantClient:
                 "input": {
                     "id": kwargs["word_processor"]["id"],
                     "content": kwargs["content"],
+                }
+            },
+        )
+
+    def update_chat_completion(self, **kwargs: Unpack[UpdateChatCompletion]):
+        return self.execute_query(
+            query=update_chat_completion_mutation,
+            key="updateChatCompletion",
+            variable_values={
+                "input": {
+                    "id": kwargs["chat_completion"],
+                    "sentAt": kwargs["sent_at"],
                 }
             },
         )
