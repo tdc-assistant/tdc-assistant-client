@@ -58,6 +58,10 @@ class CreateMessageArgs(TypedDict):
     role: MessageRole
 
 
+class CreateMessagesArgs(TypedDict):
+    messages: list[CreateMessageArgs]
+
+
 class CreateResponseAnnotationArgs(TypedDict):
     message: Message
     content: str
@@ -191,6 +195,13 @@ class TdcAssistantClient:
                 "content": kwargs["content"],
                 "role": kwargs["role"],
             },
+        )
+
+    def create_messages(self, **kwargs: Unpack[CreateMessagesArgs]) -> Message:
+        return self.execute_query(
+            query=create_message_mutation,
+            key="createMessage",
+            variable_values={"input": kwargs["messages"]},
         )
 
     def create_response_annotation(
