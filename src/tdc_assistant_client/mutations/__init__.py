@@ -12,3 +12,4 @@ from .update_code_editor import *
 from .create_word_processor import *
 from .update_word_processor import *
 from .update_chat_completion import *
+from .create_chat_completion import *
