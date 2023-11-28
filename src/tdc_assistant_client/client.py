@@ -367,7 +367,7 @@ class TdcAssistantClient:
             key="updateChatCompletion",
             variable_values={
                 "input": {
-                    "id": kwargs["chat_completion"],
+                    "id": kwargs["chat_completion"]["id"],
                     "sentAt": kwargs["sent_at"],
                 }
             },
