@@ -101,6 +101,15 @@ mutation CreateChatLog($input: CreateChatLogInput) {
         type
       }
     }
+    imageCaptures {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      chatLogId
+      type
+      imageUrl
+    }
   }
 }
 """

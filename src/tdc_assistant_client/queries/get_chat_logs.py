@@ -119,6 +119,15 @@ get_chat_logs_query = gql(
         shouldOmit
       }
     }
+    imageCaptures {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      chatLogId
+      type
+      imageUrl
+    }
   }
 }
 """

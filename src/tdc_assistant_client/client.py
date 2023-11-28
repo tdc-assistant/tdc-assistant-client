@@ -39,6 +39,8 @@ from .domain import (
     CodeEditor,
     WordProcessor,
     ChatCompletion,
+    ImageCapture,
+    ImageCaptureType,
 )
 
 
@@ -125,6 +127,12 @@ class UpdateChatCompletion(TypedDict):
 
 class CreateChatCompletion(TypedDict):
     chat_log: ChatLog
+
+
+class CreateImageCapture(TypedDict):
+    chat_log: ChatLog
+    type: ImageCaptureType
+    image_url: str
 
 
 class TdcAssistantClient:
@@ -350,6 +358,21 @@ class TdcAssistantClient:
                 "input": {
                     "id": kwargs["chat_completion"],
                     "sentAt": kwargs["sent_at"],
+                }
+            },
+        )
+
+    def create_image_capture(
+        self, **kwargs: Unpack[CreateImageCapture]
+    ) -> ImageCapture:
+        return self.execute_query(
+            query=update_chat_completion_mutation,
+            key="createImageCapture",
+            variable_values={
+                "input": {
+                    "chatLogId": kwargs["chat_log"]["id"],
+                    "type": kwargs["type"],
+                    "imageUrl": kwargs["image_url"],
                 }
             },
         )

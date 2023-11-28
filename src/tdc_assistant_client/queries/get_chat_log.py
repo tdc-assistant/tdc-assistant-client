@@ -119,6 +119,15 @@ query ChatLog($chatLogId: ID!) {
         shouldOmit
       }
     }
+    imageCaptures {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      chatLogId
+      type
+      imageUrl
+    }
   }
 }
 """
