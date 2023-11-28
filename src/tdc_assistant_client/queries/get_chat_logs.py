@@ -52,7 +52,6 @@ get_chat_logs_query = gql(
             createdAt
             updatedAt
             deletedAt
-            sentAt
             parts {
               id
               createdAt
@@ -107,12 +106,12 @@ get_chat_logs_query = gql(
       createdAt
       updatedAt
       deletedAt
-      sentAt
       parts {
         id
         createdAt
         updatedAt
         deletedAt
+        sentAt
         content
         type
         programmingLanguage

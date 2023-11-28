@@ -8,12 +8,12 @@ mutation CreateChatCompletion($chatLogId: ID!) {
     createdAt
     updatedAt
     deletedAt
-    sentAt
     parts {
       id
       createdAt
       updatedAt
       deletedAt
+      sentAt
       content
       type
       programmingLanguage
