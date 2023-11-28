@@ -28,7 +28,7 @@ from .mutations import (
     create_word_processor_mutation,
     update_word_processor_mutation,
     update_chat_completion_mutation,
-    create_chat_completion_mutation
+    create_chat_completion_mutation,
 )
 
 from .domain import (
@@ -331,14 +331,18 @@ class TdcAssistantClient:
             },
         )
 
-    def create_chat_completion(self, **kwargs: Unpack[CreateChatCompletion]):
+    def create_chat_completion(
+        self, **kwargs: Unpack[CreateChatCompletion]
+    ) -> ChatCompletion:
         return self.execute_query(
             query=create_chat_completion_mutation,
             key="createChatCompletion",
             variable_values={"chatLogId": kwargs["chat_log"]["id"]},
         )
 
-    def update_chat_completion(self, **kwargs: Unpack[UpdateChatCompletion]):
+    def update_chat_completion(
+        self, **kwargs: Unpack[UpdateChatCompletion]
+    ) -> ChatCompletion:
         return self.execute_query(
             query=update_chat_completion_mutation,
             key="updateChatCompletion",
