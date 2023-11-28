@@ -18,6 +18,7 @@ from .mutations import (
     create_chat_completion_annotation_mutation,
     create_chat_log_mutation,
     create_message_mutation,
+    create_messages_mutation,
     create_response_annotation_mutation,
     create_workspace_annotation_mutation,
     update_chat_completion_annotation_mutation,
@@ -27,6 +28,9 @@ from .mutations import (
     update_code_editor_mutation,
     create_word_processor_mutation,
     update_word_processor_mutation,
+    update_chat_completion_mutation,
+    create_chat_completion_mutation,
+    create_image_capture_mutation,
 )
 
 from .domain import (
@@ -36,6 +40,9 @@ from .domain import (
     MessageRole,
     CodeEditor,
     WordProcessor,
+    ChatCompletion,
+    ImageCapture,
+    ImageCaptureType,
 )
 
 
@@ -45,6 +52,7 @@ class GetChatLogArgs(TypedDict):
 
 class CreateChatLogArgs(TypedDict):
     customer_name: str
+    raw_text: str
 
 
 class CreateChatCompletionAnnotationArgs(TypedDict):
@@ -55,6 +63,10 @@ class CreateMessageArgs(TypedDict):
     chat_log_id: str
     content: str
     role: MessageRole
+
+
+class CreateMessagesArgs(TypedDict):
+    messages: list[CreateMessageArgs]
 
 
 class CreateResponseAnnotationArgs(TypedDict):
@@ -79,6 +91,7 @@ class UpdateChatCompletionAnnotation(TypedDict):
 
 class UpdateChatLog(TypedDict):
     customer_name: str
+    raw_text: str
 
 
 class CreateImageCaptureAnnotation(TypedDict):
@@ -107,6 +120,21 @@ class CreateWordProcessor(TypedDict):
 class UpdateWordProcessor(TypedDict):
     word_processor: WordProcessor
     content: str
+
+
+class UpdateChatCompletion(TypedDict):
+    chat_completion: ChatCompletion
+    sent_at: Optional[datetime]
+
+
+class CreateChatCompletion(TypedDict):
+    chat_log: ChatLog
+
+
+class CreateImageCapture(TypedDict):
+    chat_log: ChatLog
+    type: ImageCaptureType
+    image_url: str
 
 
 class TdcAssistantClient:
@@ -172,7 +200,12 @@ class TdcAssistantClient:
         return self.execute_query(
             query=create_chat_log_mutation,
             key="createChatLog",
-            variable_values={"customerName": kwargs["customer_name"]},
+            variable_values={
+                "input": {
+                    "customerName": kwargs["customer_name"],
+                    "rawText": kwargs["raw_text"],
+                }
+            },
         )
 
     def create_message(self, **kwargs: Unpack[CreateMessageArgs]) -> Message:
@@ -183,6 +216,22 @@ class TdcAssistantClient:
                 "chatLogId": kwargs["chat_log_id"],
                 "content": kwargs["content"],
                 "role": kwargs["role"],
+            },
+        )
+
+    def create_messages(self, **kwargs: Unpack[CreateMessagesArgs]) -> Message:
+        return self.execute_query(
+            query=create_messages_mutation,
+            key="createMessages",
+            variable_values={
+                "input": [
+                    {
+                        "chatLogId": m["chat_log_id"],
+                        "content": m["content"],
+                        "role": m["role"],
+                    }
+                    for m in kwargs["messages"]
+                ]
             },
         )
 
@@ -231,7 +280,10 @@ class TdcAssistantClient:
             query=update_chat_log_mutation,
             key="updateChatLog",
             variable_values={
-                "customerName": kwargs["customer_name"],
+                "input": {
+                    "customerName": kwargs["customer_name"],
+                    "rawText": kwargs["raw_text"],
+                }
             },
         )
 
@@ -294,6 +346,44 @@ class TdcAssistantClient:
                 "input": {
                     "id": kwargs["word_processor"]["id"],
                     "content": kwargs["content"],
+                }
+            },
+        )
+
+    def create_chat_completion(
+        self, **kwargs: Unpack[CreateChatCompletion]
+    ) -> ChatCompletion:
+        return self.execute_query(
+            query=create_chat_completion_mutation,
+            key="createChatCompletion",
+            variable_values={"chatLogId": kwargs["chat_log"]["id"]},
+        )
+
+    def update_chat_completion(
+        self, **kwargs: Unpack[UpdateChatCompletion]
+    ) -> ChatCompletion:
+        return self.execute_query(
+            query=update_chat_completion_mutation,
+            key="updateChatCompletion",
+            variable_values={
+                "input": {
+                    "id": kwargs["chat_completion"],
+                    "sentAt": kwargs["sent_at"],
+                }
+            },
+        )
+
+    def create_image_capture(
+        self, **kwargs: Unpack[CreateImageCapture]
+    ) -> ImageCapture:
+        return self.execute_query(
+            query=create_image_capture_mutation,
+            key="createImageCapture",
+            variable_values={
+                "input": {
+                    "chatLogId": kwargs["chat_log"]["id"],
+                    "type": kwargs["type"],
+                    "imageUrl": kwargs["image_url"],
                 }
             },
         )

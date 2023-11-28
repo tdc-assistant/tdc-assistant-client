@@ -1,5 +1,8 @@
 from .base import Base
+from .image_capture_type import ImageCaptureType
 
 
 class ImageCapture(Base):
-    image_url: str
+    chatLogId: str
+    type: ImageCaptureType
+    imageUrl: str

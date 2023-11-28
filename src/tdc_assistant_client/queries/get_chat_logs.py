@@ -3,12 +3,13 @@ from gql import gql
 get_chat_logs_query = gql(
     """
   query ChatLogs {
-  chatLogs {
+    chatLogs {
     id
     createdAt
     updatedAt
     deletedAt
     customerName
+    rawText
     messages {
       id
       createdAt
@@ -51,6 +52,7 @@ get_chat_logs_query = gql(
             createdAt
             updatedAt
             deletedAt
+            sentAt
             parts {
               id
               createdAt
@@ -85,20 +87,46 @@ get_chat_logs_query = gql(
         createdAt
         updatedAt
         deletedAt
+        type
         programmingLanguage
         editorNumber
         content
-        type
       }
       ... on WordProcessor {
         id
         createdAt
         updatedAt
         deletedAt
+        type
         number
         content
-        type
       }
+    }
+    chatCompletions {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      sentAt
+      parts {
+        id
+        createdAt
+        updatedAt
+        deletedAt
+        content
+        type
+        programmingLanguage
+        shouldOmit
+      }
+    }
+    imageCaptures {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      chatLogId
+      type
+      imageUrl
     }
   }
 }

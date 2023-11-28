@@ -4,10 +4,12 @@ get_chat_log_query = gql(
     """
 query ChatLog($chatLogId: ID!) {
   chatLog(id: $chatLogId) {
-    createdAt
-    customerName
-    deletedAt
     id
+    createdAt
+    updatedAt
+    deletedAt
+    customerName
+    rawText
     messages {
       id
       createdAt
@@ -50,6 +52,7 @@ query ChatLog($chatLogId: ID!) {
             createdAt
             updatedAt
             deletedAt
+            sentAt
             parts {
               id
               createdAt
@@ -78,27 +81,52 @@ query ChatLog($chatLogId: ID!) {
         }
       }
     }
-    updatedAt
     workspaces {
       ... on CodeEditor {
         id
         createdAt
         updatedAt
         deletedAt
+        type
         programmingLanguage
         editorNumber
         content
-        type
       }
       ... on WordProcessor {
         id
         createdAt
         updatedAt
         deletedAt
+        type
         number
         content
-        type
       }
+    }
+    chatCompletions {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      sentAt
+      parts {
+        id
+        createdAt
+        updatedAt
+        deletedAt
+        content
+        type
+        programmingLanguage
+        shouldOmit
+      }
+    }
+    imageCaptures {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      chatLogId
+      type
+      imageUrl
     }
   }
 }
