@@ -18,6 +18,7 @@ from .mutations import (
     create_chat_completion_annotation_mutation,
     create_chat_log_mutation,
     create_message_mutation,
+    create_messages_mutation,
     create_response_annotation_mutation,
     create_workspace_annotation_mutation,
     update_chat_completion_annotation_mutation,
@@ -29,6 +30,7 @@ from .mutations import (
     update_word_processor_mutation,
     update_chat_completion_mutation,
     create_chat_completion_mutation,
+    create_image_capture_mutation,
 )
 
 from .domain import (
@@ -219,9 +221,18 @@ class TdcAssistantClient:
 
     def create_messages(self, **kwargs: Unpack[CreateMessagesArgs]) -> Message:
         return self.execute_query(
-            query=create_message_mutation,
-            key="createMessage",
-            variable_values={"input": kwargs["messages"]},
+            query=create_messages_mutation,
+            key="createMessages",
+            variable_values={
+                "input": [
+                    {
+                        "chatLogId": m["chat_log_id"],
+                        "content": m["content"],
+                        "role": m["role"],
+                    }
+                    for m in kwargs["messages"]
+                ]
+            },
         )
 
     def create_response_annotation(
@@ -366,7 +377,7 @@ class TdcAssistantClient:
         self, **kwargs: Unpack[CreateImageCapture]
     ) -> ImageCapture:
         return self.execute_query(
-            query=update_chat_completion_mutation,
+            query=create_image_capture_mutation,
             key="createImageCapture",
             variable_values={
                 "input": {
