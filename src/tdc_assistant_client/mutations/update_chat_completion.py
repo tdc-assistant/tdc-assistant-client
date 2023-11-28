@@ -8,7 +8,6 @@ mutation UpdateChatCompletion($input: UpdateChatCompletionInput) {
     createdAt
     updatedAt
     deletedAt
-    sentAt
     parts {
       id
       createdAt

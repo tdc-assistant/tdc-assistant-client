@@ -31,6 +31,7 @@ from .mutations import (
     update_chat_completion_mutation,
     create_chat_completion_mutation,
     create_image_capture_mutation,
+    update_chat_completion_part_mutation,
 )
 
 from .domain import (
@@ -43,6 +44,7 @@ from .domain import (
     ChatCompletion,
     ImageCapture,
     ImageCaptureType,
+    ChatCompletionPart,
 )
 
 
@@ -124,6 +126,11 @@ class UpdateWordProcessor(TypedDict):
 
 class UpdateChatCompletion(TypedDict):
     chat_completion: ChatCompletion
+
+
+class UpdateChatCompletionPart(TypedDict):
+    chat_completion_part: ChatCompletionPart
+    should_omit: Optional[bool]
     sent_at: Optional[datetime]
 
 
@@ -368,7 +375,6 @@ class TdcAssistantClient:
             variable_values={
                 "input": {
                     "id": kwargs["chat_completion"]["id"],
-                    "sentAt": kwargs["sent_at"],
                 }
             },
         )
@@ -384,6 +390,21 @@ class TdcAssistantClient:
                     "chatLogId": kwargs["chat_log"]["id"],
                     "type": kwargs["type"],
                     "imageUrl": kwargs["image_url"],
+                }
+            },
+        )
+
+    def update_chat_completion_part(
+        self, **kwargs: Unpack[UpdateChatCompletionPart]
+    ) -> ChatCompletionPart:
+        return self.execute_query(
+            query=update_chat_completion_part_mutation,
+            key="updateChatCompletionPart",
+            variable_values={
+                "input": {
+                    "id": kwargs["chat_completion_part"]["id"],
+                    "shouldOmit": kwargs["should_omit"],
+                    "sentAt": kwargs["sent_at"],
                 }
             },
         )
