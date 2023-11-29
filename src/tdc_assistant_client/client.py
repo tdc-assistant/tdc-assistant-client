@@ -416,7 +416,7 @@ class TdcAssistantClient:
 
     def request_chat_completion_approval(
         self, **kwargs: Unpack[RequestChatCompletionApproval]
-    ) -> ChatCompletionPart:
+    ) -> ChatCompletion:
         return self.execute_query(
             query=request_chat_completion_approval_mutation,
             key="requestChatCompletionApproval",
