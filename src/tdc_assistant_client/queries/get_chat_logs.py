@@ -106,6 +106,7 @@ get_chat_logs_query = gql(
       createdAt
       updatedAt
       deletedAt
+      approvalStatus
       parts {
         id
         createdAt

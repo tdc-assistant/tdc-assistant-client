@@ -107,6 +107,7 @@ query ChatLog($chatLogId: ID!) {
       createdAt
       updatedAt
       deletedAt
+      approvalStatus
       parts {
         id
         createdAt
