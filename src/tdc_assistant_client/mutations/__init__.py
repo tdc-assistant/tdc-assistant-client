@@ -16,3 +16,4 @@ from .create_chat_completion import *
 from .create_image_capture import *
 from .create_messages import *
 from .update_chat_completion_part import *
+from .request_chat_completion_approval import *
