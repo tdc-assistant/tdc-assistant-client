@@ -2,8 +2,8 @@ from gql import gql
 
 request_chat_completion_approval_mutation = gql(
     """
-mutation RequestChatCompletionApproval($requestChatCompletionApprovalId: ID!) {
-  requestChatCompletionApproval(id: $requestChatCompletionApprovalId) {
+mutation RequestChatCompletionApproval($id: ID!) {
+  requestChatCompletionApproval(id: $id) {
     id
     createdAt
     updatedAt
