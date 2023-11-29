@@ -32,6 +32,7 @@ from .mutations import (
     create_chat_completion_mutation,
     create_image_capture_mutation,
     update_chat_completion_part_mutation,
+    request_chat_completion_approval_mutation,
 )
 
 from .domain import (
@@ -132,6 +133,10 @@ class UpdateChatCompletionPart(TypedDict):
     chat_completion_part: ChatCompletionPart
     should_omit: Optional[bool]
     sent_at: Optional[datetime]
+
+
+class RequestChatCompletionApproval(TypedDict):
+    chat_completion: ChatCompletion
 
 
 class CreateChatCompletion(TypedDict):
@@ -407,4 +412,13 @@ class TdcAssistantClient:
                     "sentAt": kwargs["sent_at"],
                 }
             },
+        )
+
+    def request_chat_completion_approval(
+        self, **kwargs: Unpack[RequestChatCompletionApproval]
+    ) -> ChatCompletionPart:
+        return self.execute_query(
+            query=request_chat_completion_approval_mutation,
+            key="requestChatCompletionApproval",
+            variable_values={"id": kwargs["chat_completion"]["id"]},
         )
