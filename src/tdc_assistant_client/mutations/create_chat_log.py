@@ -101,6 +101,24 @@ mutation CreateChatLog($input: CreateChatLogInput) {
         type
       }
     }
+    chatCompletions {
+      id
+      createdAt
+      updatedAt
+      deletedAt
+      approvalStatus
+      parts {
+        id
+        createdAt
+        updatedAt
+        deletedAt
+        sentAt
+        content
+        type
+        programmingLanguage
+        shouldOmit
+      }
+    }
     imageCaptures {
       id
       createdAt
